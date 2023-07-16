@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private static final String SECRET_KEY = "wluzLE8T2RXvKsERX96rxd7IitmIBqlS2lpUS/Ptpyn9fG6qfixizjlPcUg9Yd7V7pqvCPJwpyuUUtWLHfXGiExbJltMoeTF+IyP91G5sWlpuTvTdsv60FhbS2T08yM7LYUmSvRudHt3SQlotW1fnyrZ7fdiq6cyiJdBvS3Q/cCxaM1VSEKOZYAbfk5JgJQ6vbQ3suirM9cXT813U7nyaUB74T8v7aBAFU3s9jgMscalpAi8+YFjIfClGhnzk5YYqRLCtgrnlSS6R/Tgk5RO3jYlFPsinuk9m1M7LAkJSM6n6dknEqeVQJCnGiePcWj39vXQOCjP5dmP03ILFmiMSZqOiCr4+IK5PKJfMw7il/s=\n";
+    private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
 
 
@@ -59,7 +60,13 @@ public class JWTService {
     }
 
     private Claims extractAllClaims(String token){
-        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJwt(token).getBody();
+        try{
+            return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+        }
+        catch (Exception e){
+            System.out.println("Exception: "+ e + " Message: "+ e.getMessage());
+            return null;
+        }
     }
 
     private Key getSignInKey() {
